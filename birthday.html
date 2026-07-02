@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💌 (English)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fdf3ea;
+    --cream2:#f7e9db;
+    --coral:#df5b4f;
+    --blush:#ffd9d3;
+    --sage:#bfe3d0;
+    --sage-dark:#7fb89c;
+    --ink:#3a2b25;
+    --gold:#e8ab3f;
+    --muted:#a68f7c;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    height:100%;
+    font-family:'Quicksand', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow:hidden;
+  }
+  .script{ font-family:'Caveat', cursive; }
+
+  /* ---- outer stage ---- */
+  .stage{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+
+  /* ---- browser-mockup card ---- */
+  .frame{
+    width:100%;
+    max-width:460px;
+    height:min(760px, 92vh);
+    background:var(--cream);
+    border-radius:22px;
+    box-shadow:0 25px 60px rgba(58,43,37,.28);
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    border:1px solid rgba(58,43,37,.08);
+  }
+  .frame-topbar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 16px;
+    background:var(--cream2);
+    border-bottom:1px solid rgba(58,43,37,.08);
+    flex-shrink:0;
+  }
+  .dot{ width:9px; height:9px; border-radius:50%; }
+  .dot.r{ background:#e8837a; }
+  .dot.y{ background:var(--gold); }
+  .dot.g{ background:var(--sage-dark); }
+  .frame-url{
+    flex:1;
+    text-align:center;
+    font-size:.72rem;
+    color:var(--muted);
+    letter-spacing:.02em;
+    background:rgba(255,255,255,.5);
+    border-radius:8px;
+    padding:4px 8px;
+    margin:0 6px;
+  }
+
+  .frame-body{
+    position:relative;
+    flex:1;
+    overflow:hidden;
+  }
+
+  /* ---- slides ---- */
+  .slide{
+    position:absolute;
+    inset:0;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:34px 28px;
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity .45s ease, transform .45s ease;
+  }
+  .slide.active{
+    display:flex;
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  .eyebrow{
+    font-size:.7rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--sage-dark);
+    margin-bottom:10px;
+    font-weight:700;
+  }
+  h1.title{
+    font-size:2.6rem;
+    margin:0 0 6px;
+    color:var(--coral);
+    line-height:1;
+  }
+  h2.title{
+    font-size:2.1rem;
+    margin:0 0 10px;
+    color:var(--coral);
+    line-height:1.1;
+  }
+  .sub{
+    color:var(--muted);
+    font-size:.95rem;
+    max-width:300px;
+    margin:0 auto 22px;
+    line-height:1.5;
+  }
+
+  /* ---- blob characters (original doodle style, css/svg) ---- */
+  .blobs{
+    display:flex;
+    gap:10px;
+    align-items:flex-end;
+    justify-content:center;
+    margin:14px 0 20px;
+  }
+  .blob{
+    width:70px;
+    animation: bob 2.6s ease-in-out infinite;
+  }
+  .blob.b2{ animation-delay:.5s; }
+
+  @keyframes bob{
+    0%,100%{ transform:translateY(0) rotate(-2deg); }
+    50%{ transform:translateY(-8px) rotate(2deg); }
+  }
+
+  /* ---- buttons ---- */
+  .btn-row{
+    display:flex;
+    gap:14px;
+    margin-top:6px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .btn{
+    border:none;
+    border-radius:999px;
+    padding:12px 26px;
+    font-family:'Quicksand', sans-serif;
+    font-weight:700;
+    font-size:.95rem;
+    cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn:active{ transform:scale(.95); }
+  .btn-primary{
+    background:var(--coral);
+    color:#fff;
+    box-shadow:0 8px 18px rgba(223,91,79,.35);
+  }
+  .btn-primary:hover{ box-shadow:0 10px 22px rgba(223,91,79,.45); }
+  .btn-ghost{
+    background:var(--sage);
+    color:var(--ink);
+    box-shadow:0 8px 18px rgba(127,184,156,.3);
+  }
+  .btn-outline{
+    background:transparent;
+    border:2px solid var(--coral);
+    color:var(--coral);
+  }
+  #noBtn{
+    position:relative;
+    transition:transform .15s ease;
+  }
+
+  /* ---- dramatic faint reaction ---- */
+  .faint-wrap{
+    position:relative;
+    height:110px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:10px 0 6px;
+  }
+  .faint-blob{
+    width:90px;
+    animation: faintFall 1.4s ease forwards;
+    transform-origin:bottom center;
+  }
+  @keyframes faintFall{
+    0%{ transform:rotate(0deg) translateY(0); }
+    60%{ transform:rotate(78deg) translateY(6px); }
+    100%{ transform:rotate(72deg) translateY(6px); }
+  }
+  .faint-wrap .star{
+    position:absolute;
+    font-size:1.3rem;
+    animation: starSpin 1.8s linear infinite;
+    opacity:0;
+    animation-delay:.9s;
+    animation-fill-mode:forwards;
+  }
+  .star.s1{ top:6px; left:calc(50% - 46px); animation-duration:2.1s; }
+  .star.s2{ top:0px; left:calc(50% + 30px); animation-duration:1.7s; }
+  .star.s3{ top:26px; left:calc(50% + 44px); animation-duration:2.4s; }
+  @keyframes starSpin{
+    0%{ opacity:0; transform:rotate(0deg) translateX(0) scale(.6); }
+    15%{ opacity:1; }
+    100%{ opacity:.9; transform:rotate(360deg) translateX(4px) scale(1); }
+  }
+
+  /* ---- passcode ---- */
+  .photo-ring{
+    width:120px; height:120px;
+    border-radius:50%;
+    background:linear-gradient(160deg, var(--blush), var(--sage));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2.4rem;
+    margin-bottom:18px;
+    border:4px solid #fff;
+    box-shadow:0 8px 20px rgba(58,43,37,.15);
+    overflow:hidden;
+  }
+  .photo-ring img{ width:100%; height:100%; object-fit:cover; }
+
+  .dots-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:22px;
+  }
+  .pc-dot{
+    width:14px; height:14px;
+    border-radius:50%;
+    border:2px solid var(--coral);
+    background:transparent;
+    transition:background .2s ease;
+  }
+  .pc-dot.filled{ background:var(--coral); }
+  .pc-dot.err{ border-color:#c94a3f; background:#c94a3f; }
+
+  .keypad{
+    display:grid;
+    grid-template-columns:repeat(3, 58px);
+    gap:12px;
+  }
+  .key{
+    width:58px; height:58px;
+    border-radius:50%;
+    border:none;
+    background:var(--cream2);
+    color:var(--ink);
+    font-size:1.2rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform .12s ease, background .12s ease;
+  }
+  .key:active{ transform:scale(.92); background:var(--blush); }
+  .key.wide{ font-size:.85rem; color:var(--muted); }
+
+  .shake{ animation:shakeAnim .5s ease; }
+  @keyframes shakeAnim{
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-10px); }
+    40%{ transform:translateX(8px); }
+    60%{ transform:translateX(-6px); }
+    80%{ transform:translateX(4px); }
+  }
+
+  .hint{
+    margin-top:16px;
+    font-size:.75rem;
+    color:var(--muted);
+  }
+
+  /* ---- letter ---- */
+  .letter{
+    text-align:left;
+    max-height:280px;
+    overflow-y:auto;
+    background:var(--cream2);
+    border-radius:16px;
+    padding:20px 20px;
+    font-size:.98rem;
+    line-height:1.85;
+    color:var(--ink);
+    white-space:pre-line;
+    box-shadow:inset 0 0 0 1px rgba(58,43,37,.06);
+  }
+
+  /* ---- collage ---- */
+  .collage{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .frame-photo{
+    width:78px; height:96px;
+    background:var(--cream2);
+    border:3px solid #fff;
+    box-shadow:0 6px 14px rgba(58,43,37,.18);
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.5rem;
+    transform:rotate(-6deg);
+    overflow:hidden;
+  }
+  .frame-photo img{ width:100%; height:100%; object-fit:cover; }
+  .frame-photo:nth-child(2){ transform:rotate(3deg); margin-top:10px; }
+  .frame-photo:nth-child(3){ transform:rotate(-3deg); }
+
+  /* ---- progress dots top ---- */
+  .progress{
+    position:absolute;
+    top:52px;
+    left:0; right:0;
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    z-index:5;
+  }
+  .progress span{
+    width:6px; height:6px;
+    border-radius:50%;
+    background:rgba(58,43,37,.15);
+  }
+  .progress span.on{ background:var(--coral); }
+
+  #confetti-canvas{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:80;
+  }
+
+  .music-btn{
+    position:fixed;
+    bottom:18px;
+    right:18px;
+    z-index:90;
+    background:linear-gradient(135deg, var(--gold), var(--coral));
+    border:none;
+    color:#fff;
+    font-weight:700;
+    padding:10px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow:0 10px 20px rgba(0,0,0,.2);
+    font-size:.82rem;
+    font-family:'Quicksand', sans-serif;
+  }
+
+  @media (max-height:700px){
+    .frame{ height:94vh; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="stage">
+  <div class="frame">
+
+    <div class="frame-topbar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <div class="frame-url">for-you.mysite • birthday</div>
+    </div>
+
+    <div class="frame-body">
+      <div class="progress" id="progressDots"></div>
+
+      <!-- SLIDE 0 : intro yes/no -->
+      <section class="slide active" data-id="0">
+        <span class="eyebrow">Psst...</span>
+        <h1 class="title script">I made something<br>for you</h1>
+        <p class="sub">Should I open it? 👀</p>
+        <div class="blobs">
+          <svg class="blob b1" viewBox="0 0 100 100"><ellipse cx="50" cy="58" rx="42" ry="36" fill="#bfe3d0"/><circle cx="36" cy="52" r="5" fill="#3a2b25"/><circle cx="64" cy="52" r="5" fill="#3a2b25"/><path d="M40 68 Q50 76 60 68" stroke="#3a2b25" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="30" cy="62" rx="6" ry="4" fill="#ffb9ac" opacity=".6"/><ellipse cx="70" cy="62" rx="6" ry="4" fill="#ffb9ac" opacity=".6"/></svg>
+          <svg class="blob b2" viewBox="0 0 100 100"><ellipse cx="50" cy="58" rx="42" ry="36" fill="#ffd9d3"/><circle cx="36" cy="52" r="5" fill="#3a2b25"/><circle cx="64" cy="52" r="5" fill="#3a2b25"/><path d="M40 66 Q50 72 60 66" stroke="#3a2b25" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goTo(1)">Yes! 🎉</button>
+          <button class="btn btn-ghost" id="noBtn" onclick="handleNoClick()">No 🙈</button>
+        </div>
+      </section>
+
+      <!-- SLIDE NO : dramatic reaction -->
+      <section class="slide" data-id="no">
+        <span class="eyebrow">Plot twist</span>
+        <h2 class="title script">WHY did you<br>choose NO?! 😭</h2>
+        <div class="faint-wrap">
+          <span class="star s1">✨</span><span class="star s2">⭐</span><span class="star s3">💫</span>
+          <svg class="blob faint-blob" viewBox="0 0 100 100">
+            <ellipse cx="50" cy="58" rx="42" ry="36" fill="#ffd9d3"/>
+            <text x="30" y="56" font-size="16" fill="#3a2b25">×</text>
+            <text x="58" y="56" font-size="16" fill="#3a2b25">×</text>
+            <path d="M38 70 Q50 64 62 70" stroke="#3a2b25" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="sub">I think I'm gonna faint... 💀 my whole heart just shattered.</p>
+        <button class="btn btn-primary" onclick="goTo(0)">Back ↩</button>
+      </section>
+
+      <!-- SLIDE 1 : happy birthday -->
+      <section class="slide" data-id="1">
+        <span class="eyebrow">Today's the day</span>
+        <h1 class="title script">Happy<br>Birthday!</h1>
+        <div class="blobs">
+          <svg class="blob b1" viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="40" ry="34" fill="#bfe3d0"/><circle cx="38" cy="54" r="5" fill="#3a2b25"/><circle cx="62" cy="54" r="5" fill="#3a2b25"/><path d="M40 68 Q50 76 60 68" stroke="#3a2b25" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="40" y="18" width="20" height="14" rx="3" fill="#e8ab3f"/><circle cx="50" cy="16" r="3" fill="#df5b4f"/></svg>
+          <div style="font-size:2.8rem;">🎂</div>
+          <svg class="blob b2" viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="40" ry="34" fill="#ffd9d3"/><circle cx="38" cy="54" r="5" fill="#3a2b25"/><circle cx="62" cy="54" r="5" fill="#3a2b25"/><path d="M40 66 Q50 72 60 66" stroke="#3a2b25" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <p class="sub">Today is all about you! Hope this year is full of happiness. 🎈</p>
+        <button class="btn btn-primary" onclick="goTo(2)">Continue →</button>
+      </section>
+
+      <!-- SLIDE 2 : passcode -->
+      <section class="slide" data-id="2">
+        <span class="eyebrow">Locked</span>
+        <h2 class="title script">Enter Passcode</h2>
+        <div class="photo-ring" id="photoRing">🖼️</div>
+        <p class="sub" style="margin-bottom:14px;">Hint: your birthday date (DDMM) 🎂</p>
+        <div class="dots-row" id="dotsRow">
+          <div class="pc-dot"></div><div class="pc-dot"></div><div class="pc-dot"></div><div class="pc-dot"></div>
+        </div>
+        <div class="keypad" id="keypad"></div>
+        <p class="hint" id="pcHint"></p>
+      </section>
+
+      <!-- SLIDE 3 : virtual hug -->
+      <section class="slide" data-id="3">
+        <span class="eyebrow">Unlocked ✓</span>
+        <h2 class="title script">Virtual Hug<br>For You!</h2>
+        <div class="blobs" style="gap:-6px;">
+          <svg class="blob b1" viewBox="0 0 100 100"><ellipse cx="58" cy="58" rx="38" ry="34" fill="#bfe3d0"/><circle cx="46" cy="52" r="5" fill="#3a2b25"/><path d="M50 66 Q58 72 66 66" stroke="#3a2b25" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+          <svg class="blob b2" viewBox="0 0 100 100" style="margin-left:-30px;"><ellipse cx="42" cy="58" rx="38" ry="34" fill="#ffd9d3"/><circle cx="54" cy="52" r="5" fill="#3a2b25"/><path d="M34 66 Q42 72 50 66" stroke="#3a2b25" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <p class="sub">🫂 Missing you! We'll catch up soon — but for now, take this hug. 💛</p>
+        <button class="btn btn-primary" onclick="goTo(4)">Continue →</button>
+      </section>
+
+      <!-- SLIDE 4 : wish letter -->
+      <section class="slide" data-id="4">
+        <span class="eyebrow">A little note</span>
+        <h2 class="title script">My Wish<br>For You</h2>
+        <div class="letter">Happy Birthday, my friend! 🎈
+
+I hope this new year brings you everything you deserve — peace of mind, good health, and all the little joys that keep that smile on your face.
+
+Every moment spent with you has been memorable, and I'm grateful you're part of my life.
+
+Wishing you a year better than all the ones before, filled with laughter — for you and everyone around you.
+
+Happy Birthday, once again! 🎉</div>
+        <button class="btn btn-primary" style="margin-top:18px;" onclick="goTo(5)">Continue →</button>
+      </section>
+
+      <!-- SLIDE 5 : final -->
+      <section class="slide" data-id="5">
+        <span class="eyebrow">One last thing</span>
+        <h2 class="title script">You're truly<br>one of a kind</h2>
+        <div class="collage">
+          <div class="frame-photo">📷</div>
+          <div class="frame-photo">📷</div>
+          <div class="frame-photo">📷</div>
+        </div>
+        <p class="sub">Every friend is special in their own way, but you're something else. Keep spreading that same joy to everyone around you. Happy Birthday, friend! 🎁</p>
+        <button class="btn btn-primary" onclick="goTo(0)">Watch again ↻</button>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<button class="music-btn" id="musicBtn">🎵 Play Song</button>
+<audio id="bgAudio" src="birthday-song.mp3" loop></audio>
+
+<script>
+/* =========================================================
+   EDIT THESE:
+   - CORRECT_CODE: 4-digit passcode friend must enter
+   - Replace photoRing / frame-photo emoji with <img src="..."> for real photos
+   - bgAudio src: point to your own mp3 file name
+========================================================= */
+const CORRECT_CODE = "0101";
+
+const totalSlides = 6;
+let current = 0;
+let pcInput = "";
+
+const progressWrap = document.getElementById('progressDots');
+for(let i=0;i<totalSlides;i++){
+  const d = document.createElement('span');
+  progressWrap.appendChild(d);
+}
+
+function updateProgress(){
+  [...progressWrap.children].forEach((d,i)=>{
+    d.classList.toggle('on', i === current);
+  });
+}
+
+function goTo(idx){
+  document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
+  const target = document.querySelector('.slide[data-id="'+idx+'"]');
+  target.classList.add('active');
+  current = idx;
+  updateProgress();
+  if(idx === 2){ resetPasscode(); }
+}
+updateProgress();
+
+/* ---- dodging NO button ---- */
+const noBtn = document.getElementById('noBtn');
+const noTexts = ["No 🙈", "Really? 🥺", "Pretty please? 🙏"];
+let dodgeCount = 0;
+noBtn.addEventListener('mouseenter', dodge);
+noBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); dodge(); }, {passive:false});
+function dodge(){
+  dodgeCount++;
+  if(dodgeCount >= noTexts.length){ return; }
+  noBtn.textContent = noTexts[dodgeCount];
+  const x = (Math.random()-0.5)*140;
+  const y = (Math.random()-0.5)*60;
+  noBtn.style.transform = `translate(${x}px, ${y}px)`;
+}
+function handleNoClick(){
+  goTo('no');
+}
+
+/* ---- passcode keypad ---- */
+const keypad = document.getElementById('keypad');
+const keys = ["1","2","3","4","5","6","7","8","9","⌫","0","OK"];
+keys.forEach(k=>{
+  const b = document.createElement('button');
+  b.className = 'key' + (k.length>1 ? ' wide' : '');
+  b.textContent = k;
+  b.addEventListener('click', ()=>handleKey(k));
+  keypad.appendChild(b);
+});
+
+const dotsRow = document.getElementById('dotsRow');
+const pcHint = document.getElementById('pcHint');
+
+function handleKey(k){
+  if(k === "⌫"){
+    pcInput = pcInput.slice(0,-1);
+    renderDots();
+    return;
+  }
+  if(k === "OK"){
+    checkCode();
+    return;
+  }
+  if(pcInput.length < 4){
+    pcInput += k;
+    renderDots();
+  }
+  if(pcInput.length === 4){
+    setTimeout(checkCode, 200);
+  }
+}
+
+function renderDots(){
+  [...dotsRow.children].forEach((d,i)=>{
+    d.classList.remove('err');
+    d.classList.toggle('filled', i < pcInput.length);
+  });
+}
+
+function checkCode(){
+  if(pcInput === CORRECT_CODE){
+    pcHint.textContent = "";
+    burstConfetti();
+    setTimeout(()=>goTo(3), 350);
+  } else {
+    [...dotsRow.children].forEach(d=>d.classList.add('err'));
+    dotsRow.classList.add('shake');
+    pcHint.textContent = "Wrong passcode! Try again 🙃";
+    setTimeout(()=>{
+      dotsRow.classList.remove('shake');
+      pcInput = "";
+      renderDots();
+    }, 550);
+  }
+}
+function resetPasscode(){
+  pcInput = "";
+  renderDots();
+  pcHint.textContent = "";
+}
+
+/* ---- confetti ---- */
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+let particles = [];
+const colors = ['#df5b4f','#e8ab3f','#bfe3d0','#ffd9d3','#ffffff'];
+function burstConfetti(){
+  for(let i=0;i<80;i++){
+    particles.push({
+      x: innerWidth/2 + (Math.random()-0.5)*160,
+      y: innerHeight/2,
+      vx:(Math.random()-0.5)*9,
+      vy:(Math.random()-1.6)*9,
+      size:4+Math.random()*6,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      rot:Math.random()*360,
+      vr:(Math.random()-0.5)*10,
+      life:100
+    });
+  }
+}
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.25; p.rot+=p.vr; p.life-=1;
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.rot*Math.PI/180);
+    ctx.fillStyle=p.color;
+    ctx.globalAlpha=Math.max(p.life/100,0);
+    ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
+    ctx.restore();
+  });
+  particles = particles.filter(p=>p.life>0 && p.y < canvas.height+50);
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ---- music ---- */
+const audio = document.getElementById('bgAudio');
+const musicBtn = document.getElementById('musicBtn');
+let playing = false;
+musicBtn.addEventListener('click', ()=>{
+  if(!playing){
+    audio.play().catch(()=>{});
+    musicBtn.textContent = '🔇 Pause';
+  } else {
+    audio.pause();
+    musicBtn.textContent = '🎵 Play Song';
+  }
+  playing = !playing;
+});
+</script>
+</body>
+</html>
